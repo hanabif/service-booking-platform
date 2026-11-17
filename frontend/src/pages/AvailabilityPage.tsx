@@ -5,7 +5,7 @@ import {
   Copy,
   Plus,
   Trash2,
-  Sparkles,
+  Smartphone,
 } from 'lucide-react';
 import { api } from '../services/api';
 import type { AvailabilitySettings, DaySchedule, SpecialDate } from '../types';
@@ -59,7 +59,6 @@ export const AvailabilityPage: React.FC = () => {
     if (!monday) return;
 
     const newSchedule = settings.weekly_schedule.map((day) => {
-      // Apply to Mon (1) through Fri (5)
       if (day.day_of_week >= 1 && day.day_of_week <= 5) {
         return {
           ...day,
@@ -121,7 +120,7 @@ export const AvailabilityPage: React.FC = () => {
     });
   };
 
-  // Generate preview slots for the selected day
+  // Generate preview slots for selected day
   const generatePreviewSlots = () => {
     if (!settings) return [];
     const day = settings.weekly_schedule.find((d) => d.day_of_week === previewDayOfWeek);
@@ -163,8 +162,8 @@ export const AvailabilityPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-slate-500">Loading availability settings...</p>
+          <div className="w-8 h-8 border-3 border-[#144e3e] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-slate-500 font-medium">Loading availability...</p>
         </div>
       </div>
     );
@@ -176,17 +175,19 @@ export const AvailabilityPage: React.FC = () => {
     <div className="space-y-6">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="flex items-center gap-2 p-4 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-xl shadow-xs animate-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center gap-2 p-4 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-2xl shadow-xs animate-in slide-in-from-top-2 duration-200">
           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span className="text-sm font-medium">{toastMessage}</span>
+          <span className="text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
 
-      {/* Top Banner & Save Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Weekly Schedule & Bookable Slots</h2>
-          <p className="text-xs text-slate-500">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            Availability & Working Hours
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Define recurring hours of operation, midday break intervals, and appointment slot increments.
           </p>
         </div>
@@ -194,8 +195,7 @@ export const AvailabilityPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopyMondayToWeekdays}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
-            title="Copy Monday hours to Tuesday through Friday"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-xs transition-colors"
           >
             <Copy className="w-3.5 h-3.5" />
             <span>Copy Mon to Weekdays</span>
@@ -204,7 +204,7 @@ export const AvailabilityPage: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#144e3e] hover:bg-[#0f3c30] text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{saving ? 'Saving...' : 'Save Settings'}</span>
@@ -212,38 +212,38 @@ export const AvailabilityPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Grid: Weekly Schedule + Config & Live Preview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (2 cols): Day-by-Day Schedule List */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+      {/* Main Grid: Weekly Schedule + Slot Simulator */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column (8 cols): Weekly Schedule List */}
+        <div className="lg:col-span-8 space-y-5">
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
               <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                 Operating Days & Working Hours
               </span>
-              <span className="text-xs text-slate-400">Time format: 24h (HH:MM)</span>
+              <span className="text-xs text-slate-400">24h format</span>
             </div>
 
             <div className="divide-y divide-slate-100">
               {settings.weekly_schedule.map((day, idx) => (
                 <div
                   key={day.day_name}
-                  className={`p-4 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                    day.is_open ? 'hover:bg-slate-50/60' : 'bg-slate-50/40 opacity-75'
+                  className={`p-5 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                    day.is_open ? 'hover:bg-slate-50/70' : 'bg-slate-50/30 opacity-70'
                   }`}
                 >
-                  {/* Day Name & Toggle */}
+                  {/* Day Toggle */}
                   <div className="flex items-center gap-3 w-36">
                     <input
                       type="checkbox"
                       id={`day_${day.day_of_week}`}
                       checked={day.is_open}
                       onChange={(e) => handleDayChange(idx, { is_open: e.target.checked })}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                      className="w-4 h-4 rounded text-[#144e3e] focus:ring-[#144e3e]"
                     />
                     <label
                       htmlFor={`day_${day.day_of_week}`}
-                      className={`text-sm font-semibold cursor-pointer ${
+                      className={`text-sm font-bold cursor-pointer ${
                         day.is_open ? 'text-slate-900' : 'text-slate-400'
                       }`}
                     >
@@ -251,47 +251,45 @@ export const AvailabilityPage: React.FC = () => {
                     </label>
                   </div>
 
-                  {/* Hours & Breaks */}
+                  {/* Hours inputs */}
                   {day.is_open ? (
                     <div className="flex flex-wrap items-center gap-3 text-xs flex-1">
-                      {/* Open / Close */}
-                      <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200">
-                        <span className="text-slate-400">Open:</span>
+                      <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-2xl border border-slate-200">
+                        <span className="text-slate-400 font-semibold">Open:</span>
                         <input
                           type="time"
                           value={day.open_time}
                           onChange={(e) => handleDayChange(idx, { open_time: e.target.value })}
-                          className="bg-transparent font-medium text-slate-800 focus:outline-none"
+                          className="bg-transparent font-bold text-slate-900 focus:outline-none"
                         />
                         <span className="text-slate-300">-</span>
                         <input
                           type="time"
                           value={day.close_time}
                           onChange={(e) => handleDayChange(idx, { close_time: e.target.value })}
-                          className="bg-transparent font-medium text-slate-800 focus:outline-none"
+                          className="bg-transparent font-bold text-slate-900 focus:outline-none"
                         />
                       </div>
 
-                      {/* Lunch / Break */}
-                      <div className="flex items-center gap-1.5 bg-amber-50/60 px-2.5 py-1 rounded-xl border border-amber-200/60">
-                        <span className="text-amber-700 font-medium">Break:</span>
+                      <div className="flex items-center gap-1.5 bg-amber-50/60 px-3 py-1.5 rounded-2xl border border-amber-200/60">
+                        <span className="text-amber-800 font-bold">Break:</span>
                         <input
                           type="time"
                           value={day.break_start || ''}
                           onChange={(e) => handleDayChange(idx, { break_start: e.target.value })}
-                          className="bg-transparent font-medium text-amber-900 focus:outline-none"
+                          className="bg-transparent font-bold text-amber-900 focus:outline-none"
                         />
                         <span className="text-amber-300">-</span>
                         <input
                           type="time"
                           value={day.break_end || ''}
                           onChange={(e) => handleDayChange(idx, { break_end: e.target.value })}
-                          className="bg-transparent font-medium text-amber-900 focus:outline-none"
+                          className="bg-transparent font-bold text-amber-900 focus:outline-none"
                         />
                       </div>
                     </div>
                   ) : (
-                    <div className="flex-1 text-xs font-semibold text-rose-500 py-1">
+                    <div className="flex-1 text-xs font-bold text-rose-500 py-1">
                       Closed all day
                     </div>
                   )}
@@ -300,21 +298,21 @@ export const AvailabilityPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Holiday / Special Date Exceptions */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5">
+          {/* Special date exceptions */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-sm font-semibold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900">
                   Holidays & Custom Date Exceptions
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Override working hours on specific calendar dates
                 </p>
               </div>
 
               <button
                 onClick={() => setIsSpecialModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-emerald-50 text-[#144e3e] hover:bg-emerald-100 text-xs font-bold transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Date Exception</span>
@@ -326,16 +324,16 @@ export const AvailabilityPage: React.FC = () => {
                 <p className="text-xs text-slate-400 py-3">No holiday exceptions added yet.</p>
               ) : (
                 settings.special_dates.map((item) => (
-                  <div key={item.id} className="py-2.5 flex items-center justify-between text-xs">
+                  <div key={item.id} className="py-3 flex items-center justify-between text-xs">
                     <div>
-                      <span className="font-semibold text-slate-900">{item.date}</span>
+                      <span className="font-bold text-slate-900">{item.date}</span>
                       <span className="text-slate-400 ml-2">({item.reason})</span>
                       {item.is_closed ? (
-                        <span className="ml-2 px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-medium">
+                        <span className="ml-2 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 font-semibold">
                           Closed
                         </span>
                       ) : (
-                        <span className="ml-2 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                        <span className="ml-2 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold">
                           Custom Hours ({item.open_time} - {item.close_time})
                         </span>
                       )}
@@ -343,7 +341,7 @@ export const AvailabilityPage: React.FC = () => {
 
                     <button
                       onClick={() => handleDeleteSpecialDate(item.id)}
-                      className="text-slate-400 hover:text-rose-600 p-1 rounded-lg"
+                      className="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl"
                       title="Remove date"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -355,14 +353,14 @@ export const AvailabilityPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Slot Settings & Interactive Customer Preview */}
-        <div className="space-y-6">
-          {/* Slot Interval Settings */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900">Appointment Slot Config</h3>
+        {/* Right Column (4 cols): Slot Config & Live Customer App Simulator */}
+        <div className="lg:col-span-4 space-y-5">
+          {/* Slot Config */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 space-y-4">
+            <h3 className="text-sm font-bold text-slate-900">Appointment Slot Config</h3>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Base Slot Duration
               </label>
               <select
@@ -370,7 +368,7 @@ export const AvailabilityPage: React.FC = () => {
                 onChange={(e) =>
                   setSettings({ ...settings, slot_duration_minutes: parseInt(e.target.value) || 30 })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20"
               >
                 <option value={15}>15 minutes</option>
                 <option value={30}>30 minutes (Standard)</option>
@@ -380,15 +378,15 @@ export const AvailabilityPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
-                Buffer Time Between Bookings
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Turnover Buffer Between Bookings
               </label>
               <select
                 value={settings.buffer_time_minutes}
                 onChange={(e) =>
                   setSettings({ ...settings, buffer_time_minutes: parseInt(e.target.value) || 0 })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20"
               >
                 <option value={0}>No buffer (0 min)</option>
                 <option value={5}>5 minutes sanitation buffer</option>
@@ -398,7 +396,7 @@ export const AvailabilityPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Advance Booking Window
               </label>
               <select
@@ -406,39 +404,38 @@ export const AvailabilityPage: React.FC = () => {
                 onChange={(e) =>
                   setSettings({ ...settings, advance_booking_days: parseInt(e.target.value) || 30 })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20"
               >
                 <option value={7}>7 days in advance</option>
                 <option value={14}>14 days in advance</option>
-                <option value={30}>30 days in advance (Recommended)</option>
+                <option value={30}>30 days in advance (Standard)</option>
                 <option value={60}>60 days in advance</option>
               </select>
             </div>
           </div>
 
-          {/* Customer Time Slot Live Preview */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-3">
+          {/* Interactive Customer Slot Simulator */}
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-indigo-700 font-semibold text-xs">
-                <Sparkles className="w-4 h-4 text-indigo-500" />
-                <span>Customer Slot Preview</span>
+              <div className="flex items-center gap-1.5 text-[#144e3e] font-bold text-xs">
+                <Smartphone className="w-4 h-4" />
+                <span>Flutter App Time Slots</span>
               </div>
-              <span className="text-[10px] text-slate-400">Flutter App Simulator</span>
+              <span className="text-[10px] text-slate-400 font-semibold uppercase">Simulator</span>
             </div>
 
-            <p className="text-xs text-slate-500">
-              Select a day below to test the exact time buttons rendered for customers in the mobile app:
+            <p className="text-xs text-slate-400">
+              Select a day below to verify the exact booking buttons generated in the mobile customer app:
             </p>
 
-            {/* Day Selector Pill Bar */}
             <div className="flex items-center gap-1 overflow-x-auto pb-1">
               {settings.weekly_schedule.map((d) => (
                 <button
                   key={d.day_name}
                   onClick={() => setPreviewDayOfWeek(d.day_of_week)}
-                  className={`px-2 py-1 text-[11px] rounded-lg font-semibold shrink-0 transition-colors ${
+                  className={`px-3 py-1.5 text-xs rounded-xl font-bold shrink-0 transition-colors ${
                     previewDayOfWeek === d.day_of_week
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-[#144e3e] text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -447,10 +444,9 @@ export const AvailabilityPage: React.FC = () => {
               ))}
             </div>
 
-            {/* Generated Time Slots Grid */}
             <div className="pt-2">
               {previewSlots.length === 0 ? (
-                <div className="p-5 text-center text-rose-500 bg-rose-50 rounded-xl text-xs font-semibold">
+                <div className="p-5 text-center text-rose-500 bg-rose-50 rounded-2xl text-xs font-semibold">
                   Business is closed on this day.
                 </div>
               ) : (
@@ -458,10 +454,10 @@ export const AvailabilityPage: React.FC = () => {
                   {previewSlots.map((slot, i) => (
                     <div
                       key={i}
-                      className={`text-center py-2 px-1 text-xs rounded-xl font-medium border ${
+                      className={`text-center py-2 px-1 text-xs rounded-2xl font-bold border ${
                         slot.isBreak
-                          ? 'bg-amber-50 text-amber-700 border-amber-200 line-through opacity-70'
-                          : 'bg-indigo-50/60 text-indigo-900 border-indigo-200/60 hover:bg-indigo-600 hover:text-white cursor-pointer transition-colors'
+                          ? 'bg-amber-50 text-amber-700 border-amber-200 line-through opacity-60'
+                          : 'bg-emerald-50/70 text-[#144e3e] border-emerald-200/60 hover:bg-[#144e3e] hover:text-white cursor-pointer transition-colors shadow-xs'
                       }`}
                       title={slot.isBreak ? 'Break time' : 'Available bookable slot'}
                     >
@@ -486,18 +482,18 @@ export const AvailabilityPage: React.FC = () => {
         >
           <form onSubmit={handleAddSpecialDate} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Date *</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Date *</label>
               <input
                 type="date"
                 required
                 value={newSpecialDate.date}
                 onChange={(e) => setNewSpecialDate({ ...newSpecialDate, date: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Reason / Holiday Name *
               </label>
               <input
@@ -506,7 +502,7 @@ export const AvailabilityPage: React.FC = () => {
                 placeholder="e.g., Labor Day, Staff Training..."
                 value={newSpecialDate.reason}
                 onChange={(e) => setNewSpecialDate({ ...newSpecialDate, reason: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20"
               />
             </div>
 
@@ -518,9 +514,9 @@ export const AvailabilityPage: React.FC = () => {
                 onChange={(e) =>
                   setNewSpecialDate({ ...newSpecialDate, is_closed: e.target.checked })
                 }
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                className="w-4 h-4 rounded text-[#144e3e] focus:ring-[#144e3e]"
               />
-              <label htmlFor="is_closed_toggle" className="text-xs font-medium text-slate-700">
+              <label htmlFor="is_closed_toggle" className="text-xs font-semibold text-slate-700">
                 Mark as Closed all day
               </label>
             </div>
@@ -529,13 +525,13 @@ export const AvailabilityPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsSpecialModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-2xl"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-xs"
+                className="px-4 py-2.5 text-xs font-bold bg-[#144e3e] hover:bg-[#0f3c30] text-white rounded-2xl shadow-xs"
               >
                 Add Exception
               </button>

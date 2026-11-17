@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Search,
   Filter,
+  Command,
 } from 'lucide-react';
 import { api } from '../services/api';
 import type { Service } from '../types';
@@ -129,24 +130,26 @@ export const ServicesPage: React.FC = () => {
     <div className="space-y-6">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="flex items-center gap-2 p-4 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-xl shadow-xs animate-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center gap-2 p-4 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-2xl shadow-xs animate-in slide-in-from-top-2 duration-200">
           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span className="text-sm font-medium">{toastMessage}</span>
+          <span className="text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
 
-      {/* Action Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Services & Pricing Menu</h2>
-          <p className="text-xs text-slate-500">
-            Define appointment lengths, categories, and costs shown to customers in the mobile app.
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            Services & Pricing Catalog
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Configure service offerings, durations, and pricing displayed to mobile app customers.
           </p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-colors shrink-0"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#144e3e] hover:bg-[#0f3c30] text-white text-xs font-semibold shadow-xs transition-colors shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Service</span>
@@ -162,8 +165,12 @@ export const ServicesPage: React.FC = () => {
             placeholder="Search services by title or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-slate-200/80 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder:text-slate-400 shadow-xs"
+            className="w-full pl-10 pr-12 py-2.5 rounded-2xl bg-white border border-slate-200/80 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e] placeholder:text-slate-400 shadow-xs"
           />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-semibold text-slate-400">
+            <Command className="w-2.5 h-2.5" />
+            <span>F</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -171,7 +178,7 @@ export const ServicesPage: React.FC = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3.5 py-2 rounded-xl bg-white border border-slate-200/80 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 w-full sm:w-auto shadow-xs"
+            className="px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e] w-full sm:w-auto shadow-xs"
           >
             <option value="all">All Categories ({services.length})</option>
             {categories.map((cat) => (
@@ -183,22 +190,22 @@ export const ServicesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Services Grid */}
+      {/* Services Cards Grid */}
       {loading ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-slate-200/80">
-          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-slate-500">Loading services...</p>
+        <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/80">
+          <div className="w-8 h-8 border-3 border-[#144e3e] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-xs text-slate-500 font-medium">Loading catalog...</p>
         </div>
       ) : filteredServices.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-2xl border border-slate-200/80">
+        <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/80">
           <Scissors className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-900">No services found</h3>
-          <p className="text-xs text-slate-500 mt-1">
+          <h3 className="text-sm font-bold text-slate-900">No services found</h3>
+          <p className="text-xs text-slate-400 mt-1">
             Create your first service offering to allow clients to book with you.
           </p>
           <button
             onClick={handleOpenAddModal}
-            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold shadow-xs hover:bg-indigo-700"
+            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#144e3e] text-white text-xs font-semibold shadow-xs"
           >
             <Plus className="w-4 h-4" />
             Add Service
@@ -209,30 +216,30 @@ export const ServicesPage: React.FC = () => {
           {filteredServices.map((service) => (
             <div
               key={service.id}
-              className={`bg-white rounded-2xl border transition-all p-5 flex flex-col justify-between shadow-xs hover:shadow-md ${
+              className={`bg-white rounded-3xl border transition-all p-6 flex flex-col justify-between shadow-xs hover:border-slate-300 ${
                 service.is_active ? 'border-slate-200/80' : 'border-slate-200 bg-slate-50/50 opacity-75'
               }`}
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-[11px] font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-50 px-2 py-0.5 rounded-md">
+                  <span className="text-[11px] font-bold tracking-wider text-[#144e3e] uppercase bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
                     {service.category || 'General'}
                   </span>
                   <Badge status={service.is_active ? 'active' : 'inactive'} size="sm" />
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 mt-3">{service.name}</h3>
+                <h3 className="text-base font-bold text-slate-900 mt-4">{service.name}</h3>
                 <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
                   {service.description || 'No description provided.'}
                 </p>
 
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
                     <span>{service.duration_minutes} minutes</span>
                   </div>
-                  <div className="text-base font-bold text-slate-900">
-                    ${service.price.toFixed(2)}
+                  <div className="text-xl font-extrabold text-slate-900">
+                    ${service.price.toFixed(0)}
                   </div>
                 </div>
               </div>
@@ -240,26 +247,26 @@ export const ServicesPage: React.FC = () => {
               <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
                 <button
                   onClick={() => handleToggleActive(service)}
-                  className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors ${
+                  className={`text-xs font-bold px-3 py-1 rounded-xl transition-colors ${
                     service.is_active
                       ? 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-                      : 'text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50'
+                      : 'text-[#144e3e] hover:bg-emerald-50'
                   }`}
                 >
-                  {service.is_active ? 'Pause / Hide' : 'Activate Service'}
+                  {service.is_active ? 'Hide from App' : 'Publish to App'}
                 </button>
 
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => handleOpenEditModal(service)}
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-[#144e3e] hover:bg-emerald-50 rounded-xl transition-colors"
                     title="Edit Service"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setDeleteConfirmService(service)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                     title="Delete Service"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -281,7 +288,7 @@ export const ServicesPage: React.FC = () => {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Service Name *
               </label>
               <input
@@ -290,39 +297,39 @@ export const ServicesPage: React.FC = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Executive Haircut & Style"
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e]"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
                 <input
                   type="text"
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   placeholder="Haircut, Beard..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Price ($ USD) *
                 </label>
                 <input
                   type="number"
                   min="0"
-                  step="0.5"
+                  step="1"
                   required
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1">
                   Duration (mins) *
                 </label>
                 <select
@@ -330,27 +337,26 @@ export const ServicesPage: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, duration_minutes: parseInt(e.target.value) || 30 })
                   }
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white"
+                  className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e] bg-white"
                 >
                   <option value={15}>15 minutes</option>
                   <option value={30}>30 minutes</option>
                   <option value={45}>45 minutes</option>
-                  <option value={60}>60 minutes (1 hr)</option>
+                  <option value={60}>60 minutes</option>
                   <option value={75}>75 minutes</option>
-                  <option value={90}>90 minutes (1.5 hr)</option>
-                  <option value={120}>120 minutes (2 hr)</option>
+                  <option value={90}>90 minutes</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Description</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Description</label>
               <textarea
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe what is included in this service..."
-                className="w-full p-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full p-3 rounded-2xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#144e3e]/20 focus:border-[#144e3e]"
               />
             </div>
 
@@ -360,10 +366,10 @@ export const ServicesPage: React.FC = () => {
                 id="is_active_toggle"
                 checked={formData.is_active}
                 onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                className="w-4 h-4 rounded text-[#144e3e] focus:ring-[#144e3e]"
               />
-              <label htmlFor="is_active_toggle" className="text-xs font-medium text-slate-700">
-                Visible & bookable immediately by customers
+              <label htmlFor="is_active_toggle" className="text-xs font-semibold text-slate-700">
+                Visible & bookable immediately by customers in mobile app
               </label>
             </div>
 
@@ -371,13 +377,13 @@ export const ServicesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-2xl transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-xs transition-colors"
+                className="px-5 py-2.5 text-xs font-bold bg-[#144e3e] hover:bg-[#0f3c30] text-white rounded-2xl shadow-xs transition-colors"
               >
                 {editingService ? 'Save Changes' : 'Create Service'}
               </button>
@@ -396,7 +402,7 @@ export const ServicesPage: React.FC = () => {
           maxWidth="sm"
         >
           <div className="space-y-4">
-            <p className="text-sm text-slate-600">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Are you sure you want to permanently delete this service? Past booking records will
               remain preserved in history.
             </p>
@@ -404,13 +410,13 @@ export const ServicesPage: React.FC = () => {
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setDeleteConfirmService(null)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-2xl"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-xs"
+                className="px-4 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-2xl shadow-xs"
               >
                 Delete Service
               </button>

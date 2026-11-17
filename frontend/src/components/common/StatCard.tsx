@@ -1,65 +1,70 @@
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  change?: number;
-  period?: string;
-  icon: LucideIcon;
-  iconColor?: string;
-  iconBg?: string;
-  badgeText?: string;
+  subtitle?: string;
+  isHero?: boolean;
+  onClickArrow?: () => void;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
-  change,
-  period = 'vs last week',
-  icon: Icon,
-  iconColor = 'text-indigo-600',
-  iconBg = 'bg-indigo-50',
-  badgeText,
+  subtitle,
+  isHero = false,
+  onClickArrow,
 }) => {
-  const isPositive = change !== undefined && change >= 0;
+  if (isHero) {
+    return (
+      <div className="bg-[#144e3e] text-white rounded-3xl p-6 relative overflow-hidden shadow-xs flex flex-col justify-between h-44">
+        {/* Subtle decorative ring */}
+        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full border border-white/10 pointer-events-none" />
+
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-emerald-100 tracking-wide">{title}</span>
+          <button
+            onClick={onClickArrow}
+            className="w-8 h-8 rounded-full border border-white/30 hover:border-white flex items-center justify-center text-white transition-colors"
+          >
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div>
+          <div className="text-4xl font-extrabold tracking-tight text-white">{value}</div>
+          {subtitle && (
+            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-800/60 border border-emerald-600/40 text-[11px] font-medium text-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
+              <span>{subtitle}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between h-44">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-500">{title}</span>
-        <div className={`p-2.5 rounded-xl ${iconBg}`}>
-          <Icon className={`w-5 h-5 ${iconColor}`} />
-        </div>
+        <span className="text-xs font-semibold text-slate-500 tracking-wide">{title}</span>
+        <button
+          onClick={onClickArrow}
+          className="w-8 h-8 rounded-full border border-slate-200 hover:border-slate-400 hover:bg-slate-50 flex items-center justify-center text-slate-600 transition-colors"
+        >
+          <ArrowUpRight className="w-4 h-4" />
+        </button>
       </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900">{value}</span>
-        {badgeText && (
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-            {badgeText}
-          </span>
+      <div>
+        <div className="text-4xl font-extrabold tracking-tight text-slate-900">{value}</div>
+        {subtitle && (
+          <div className="mt-2 text-xs font-medium text-slate-400 flex items-center gap-1">
+            <span>{subtitle}</span>
+          </div>
         )}
       </div>
-
-      {change !== undefined && (
-        <div className="mt-3 flex items-center text-xs gap-1.5 text-slate-500">
-          <span
-            className={`inline-flex items-center font-semibold ${
-              isPositive ? 'text-emerald-600' : 'text-rose-600'
-            }`}
-          >
-            {isPositive ? (
-              <TrendingUp className="w-3.5 h-3.5 mr-0.5" />
-            ) : (
-              <TrendingDown className="w-3.5 h-3.5 mr-0.5" />
-            )}
-            {isPositive ? `+${change}%` : `${change}%`}
-          </span>
-          <span>{period}</span>
-        </div>
-      )}
     </div>
   );
 };

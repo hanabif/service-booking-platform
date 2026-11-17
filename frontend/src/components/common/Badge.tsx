@@ -2,7 +2,7 @@ import React from 'react';
 import type { BookingStatus } from '../../types';
 
 interface BadgeProps {
-  status?: BookingStatus | 'active' | 'inactive';
+  status?: BookingStatus | 'active' | 'inactive' | 'in_progress';
   text?: string;
   size?: 'sm' | 'md';
 }
@@ -10,18 +10,20 @@ interface BadgeProps {
 export const Badge: React.FC<BadgeProps> = ({ status, text, size = 'md' }) => {
   const getStyles = () => {
     switch (status) {
-      case 'pending':
-        return 'bg-amber-50 text-amber-800 border-amber-200 ring-amber-500/20';
-      case 'confirmed':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-200 ring-emerald-500/20';
       case 'completed':
-        return 'bg-blue-50 text-blue-800 border-blue-200 ring-blue-500/20';
+        return 'bg-[#e8f7f0] text-[#144e3e] border border-[#a7f3d0]/60';
+      case 'confirmed':
+        return 'bg-[#e8f7f0] text-[#144e3e] border border-[#a7f3d0]/60';
+      case 'in_progress':
+        return 'bg-[#fef9c3] text-[#854d0e] border border-[#fde047]/60';
+      case 'pending':
+        return 'bg-[#fef2f2] text-[#991b1b] border border-[#fecaca]/60';
       case 'cancelled':
-        return 'bg-rose-50 text-rose-800 border-rose-200 ring-rose-500/20';
+        return 'bg-slate-100 text-slate-500 border border-slate-200';
       case 'active':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        return 'bg-[#e8f7f0] text-[#144e3e] border border-[#a7f3d0]/60';
       case 'inactive':
-        return 'bg-slate-100 text-slate-600 border-slate-200';
+        return 'bg-slate-100 text-slate-500 border border-slate-200';
       default:
         return 'bg-slate-100 text-slate-700 border-slate-200';
     }
@@ -31,11 +33,13 @@ export const Badge: React.FC<BadgeProps> = ({ status, text, size = 'md' }) => {
     if (text) return text;
     switch (status) {
       case 'pending':
-        return 'Pending Approval';
+        return 'Pending';
       case 'confirmed':
         return 'Confirmed';
       case 'completed':
         return 'Completed';
+      case 'in_progress':
+        return 'In Progress';
       case 'cancelled':
         return 'Cancelled';
       case 'active':
@@ -47,33 +51,13 @@ export const Badge: React.FC<BadgeProps> = ({ status, text, size = 'md' }) => {
     }
   };
 
-  const getDotColor = () => {
-    switch (status) {
-      case 'pending':
-        return 'bg-amber-500 animate-pulse';
-      case 'confirmed':
-        return 'bg-emerald-500';
-      case 'completed':
-        return 'bg-blue-500';
-      case 'cancelled':
-        return 'bg-rose-500';
-      case 'active':
-        return 'bg-emerald-500';
-      case 'inactive':
-        return 'bg-slate-400';
-      default:
-        return 'bg-slate-400';
-    }
-  };
-
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs font-medium';
+  const sizeClasses = size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-3 py-1 text-xs font-semibold';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border ${sizeClasses} ${getStyles()}`}
+      className={`inline-flex items-center justify-center rounded-full font-medium tracking-tight ${sizeClasses} ${getStyles()}`}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${getDotColor()}`} />
-      <span>{getLabel()}</span>
+      {getLabel()}
     </span>
   );
 };
